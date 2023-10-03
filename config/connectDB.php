@@ -13,7 +13,7 @@
         // configuration des paramétres
         $connectDB -> setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        // Verification si tous va bien
+        // // Verification si tous va bien
         // if($connectDB) {
         //     echo "<br>";
         //     echo "<b style='color:green;font-size:20px;'>Connexion a la BD réussi :-) !!!</b>";

@@ -96,9 +96,13 @@
                     
                     // enregistrement du photo en BD
                     $requete -> bindValue(':photo_profil', $newPhotoProfil );
-                }    
+                } 
+
                 // execution de la requette pour inserer dans la BD les infos entré par user
                 $requete -> execute(); 
+
+                // On include le fichier d'envoi de mail de confirmation
+                require_once "envois_email.php";
             }
         }       
     } 

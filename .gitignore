@@ -2,7 +2,6 @@ node_modules
 admin/css/sb-admin-2.css
 admin/css/sb-admin-2.min.css
 
-
 admin/js/
 admin/scss/
 admin/vendor/
@@ -11,3 +10,8 @@ css/bootstrap.css
 css/bootstrap.min.css
 
 js/
+PHPMailer/src/DSNConfigurator.php
+PHPMailer/src/OAuth.php
+PHPMailer/src/OAuthTokenProvider.php
+PHPMailer/src/POP3.php
+PHPMailer/composer.json
