@@ -196,7 +196,7 @@
 
                                 <div class="card-footer text-center py-3">
                                     <div class="small">
-                                        <a href="login.html">
+                                        <a href="login.php">
                                             Avez-vous un compte ? Connectez-vous !
                                         </a>
                                     </div>
