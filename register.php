@@ -195,11 +195,11 @@
                                 ?>
 
                                 <div class="card-footer text-center py-3">
-                                    <div class="small">
+                                    <!-- <div class="small"> -->
                                         <a href="login.php">
-                                            Avez-vous un compte ? Connectez-vous !
+                                            Vous avez un compte ? Connectez-vous !
                                         </a>
-                                    </div>
+                                    <!-- </div> -->
                                 </div>
                             </div>
                         </div>

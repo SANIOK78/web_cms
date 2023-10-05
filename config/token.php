@@ -16,7 +16,7 @@
         return $token;  
     }
 
-    $token = tokenAleaString(25);
+    $token = tokenAleaString(20);
 
 
 ?>
