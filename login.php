@@ -1,4 +1,5 @@
 <?php 
+    $title = "Login - Page Connexion";
     require_once "config/connectDB.php";
 
     // si user clik sur btn "se connecter"

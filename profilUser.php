@@ -1,4 +1,5 @@
 <?php
+    $title = "Profil utilisateur";
     session_start();  //ouverture de la session
     require_once "config/connectDB.php";
     require_once "communs/header_login.php";
