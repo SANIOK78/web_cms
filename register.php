@@ -81,7 +81,7 @@
                     if(preg_match("#jpeg|png|jpg#", $_FILES['photo_profil']['type'])){
 
                         // Astuce pour avoir une photo avec un nom unique
-                        $newPhotoProfil = date('His')."_".$_FILES['photo_profil']['name'];
+                        $newPhotoProfil = uniqid()."-".$_FILES['photo_profil']['name'];
     
                         // On precise le chemin ou on va stoquer les photo de profil
                         $path = 'images/photos_profil/';

@@ -25,6 +25,12 @@
 
         // Logique pour supprimer un compte
         if(isset($_POST['valider_supprim_compte'])) {
+            
+            //1. Suppresion de l'ancienne photo:
+            $ancienneImg = "images/photos_profil/".$photoProfil; // Chemin de l'ancienne photo
+            if(file_exists($ancienneImg)) { 
+                unlink($ancienneImg);      // Supprimer l'ancienne image
+            }
 
             $requete = $connectDB ->prepare('DELETE FROM web_cms.utilisateurs WHERE id_user = :userId');
             $requete -> bindValue(':userId', $userID);

@@ -59,7 +59,7 @@
                         SET nom_user=:nom, prenom_user=:prenom, pseudo=:pseudo, photo_user=:photoProfil
                         WHERE id_user = :userID ");
                     
-                    $updateProfil -> bindValue(':userID', $_SESSION['id_user']);
+                    $updateProfil -> bindValue(':userID', $userId);
                     $updateProfil -> bindValue(':nom', $_POST['nom'] );
                     $updateProfil-> bindValue(':prenom', $_POST['prenom'] );
                     $updateProfil -> bindValue(':pseudo', $_POST['pseudo']);
@@ -71,11 +71,17 @@
                         $updateProfil -> bindValue(':photoProfil', $photoProfil);
 
                     } else {  //si user a choisi une nouvelle photo
+                        //1. Suppresion de l'ancienne photo:
+                        $ancienneImg = "images/photos_profil/".$photoProfil; // Chemin de l'ancienne photo
+                        if(file_exists($ancienneImg)) { 
+                            unlink($ancienneImg);      // Supprimer l'ancienne image
+                        }
+                        // 2. On rajoute la nouvelle photo
                         //  vérif si elle correspond au type : .jpeg, .jpg, .png        
                         if(preg_match("#jpeg|png|jpg#", $_FILES['photo_profil']['type'])){
 
                             // Astuce pour avoir une photo avec un nom unique
-                            $newPhotoProfil = date('His')."_".$_FILES['photo_profil']['name'];
+                            $newPhotoProfil = uniqid()."-".$_FILES['photo_profil']['name'];
         
                             // On precise le chemin ou on va stoquer les photo de profil
                             $path = 'images/photos_profil/';
@@ -89,7 +95,7 @@
                         }
                         
                         // enregistrement du photo en BD
-                        $updateProfil -> bindValue(':photo_profil', $newPhotoProfil );
+                        $updateProfil -> bindValue(':photoProfil', $newPhotoProfil );
                     }
 
                     $resultUpdate = $updateProfil -> execute();
