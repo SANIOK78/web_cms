@@ -1,39 +1,107 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
-        <title>Password Reset - SB Admin</title>
-        <link href="css/styles.css" rel="stylesheet" />
-        <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
-    </head>
-    <body class="bg-primary">
+<?php
+    $title = "Mot de passe oublié";
+    require_once "communs/header_login.php";
+    require_once "config/connectDB.php";
+
+    // reinitialisation du mot de passe
+    // Vérif si user a clické sur bouton "Réinitialise le mot de passe"
+    if(isset($_POST['forget_pwd'])) {
+        // si le champ est vide et si ce n'est pas au bon format
+        if(empty($_POST['email']) || !filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+            $message = "Rentrez un adresse email valide !";
+        } else {  //si @mail format valide
+            $email = htmlspecialchars($_POST['email']);  
+          // Interogation de la BD si @mail enregistré
+            $requete = $connectDB -> prepare('SELECT * FROM utilisateurs 
+                WHERE email_user = :email AND role_user = :roleUser');                   
+          // La liaison des info
+            $requete -> bindValue(':email', $email);
+            $requete -> bindValue(':roleUser', 'Admin');
+          // Execution de la requete
+            $requete -> execute();
+          // Recup de resultat sous forme tableau
+            $result = $requete -> fetch();
+          // Nombre d'enregistrements récupéré => 1
+            $nombre = $requete -> rowCount();
+
+            if($nombre == 0 ) {
+                $message = "Pas d'administrateur enregistré avec cette @email !";
+
+            } else {   // adresse valide
+                // On va vérifier si cette @mail a été déjà validé (validation_emai_user = 1)
+                if($result['validation_email_user'] != 1) {  //si @mail pas validé
+
+                    require_once "config/token.php"; // On génér un token
+
+                    // Mise a jour du token de notre table "utilisateur"
+                    $updateToken = $connectDB -> prepare('UPDATE utilisateurs SET token_user =:token 
+                                                        WHERE email_user = :email AND role_user = :roleUser');
+                    $updateToken -> bindValue(':token', $token);
+                    $updateToken -> bindValue(':email', $email);
+                    $updateToken -> bindValue(':roleUser', 'Admin');
+
+                    $updateToken ->execute();  //on remplace l'ancien token par le nouveau
+
+                    // Envoi du mail avec un lien permettant de confirmer l'@email
+                    require_once "envois_email.php";
+
+                } else {  // @email valide => envois mail/lien permettant de réinitialiser MdP
+
+                    require_once "config/token.php"; // On génér un token aleatoir
+                  // Mise a jour du token de notre table "utilisateur"
+                    $updateToken = $connectDB -> prepare('UPDATE utilisateurs SET token_user =:token
+                                                        WHERE email_user = :email AND role_user = :roleUser');
+                    $updateToken -> bindValue(':token', $token);
+                    $updateToken -> bindValue(':email', $email);
+                    $updateToken -> bindValue(':roleUser', 'Admin');
+
+                    $updateToken ->execute();  //on remplace l'ancien token par le nouveau
+
+                    // Envoi du mail avec un lien permettant de réinitialiser le mot de passe
+                    require_once "mail_reinit_mdp.php";
+                }
+            }           
+        }
+    }
+?>
+
+<body class="bg-info">
         <div id="layoutAuthentication">
             <div id="layoutAuthentication_content">
                 <main>
                     <div class="container">
                         <div class="row justify-content-center">
                             <div class="col-lg-5">
+
                                 <div class="card shadow-lg border-0 rounded-lg mt-5">
-                                    <div class="card-header"><h3 class="text-center font-weight-light my-4">Password Recovery</h3></div>
-                                    <div class="card-body">
-                                        <div class="small mb-3 text-muted">Enter your email address and we will send you a link to reset your password.</div>
-                                        <form>
-                                            <div class="form-floating mb-3">
-                                                <input class="form-control" id="inputEmail" type="email" placeholder="name@example.com" />
-                                                <label for="inputEmail">Email address</label>
-                                            </div>
-                                            <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
-                                                <a class="small" href="login.html">Return to login</a>
-                                                <a class="btn btn-primary" href="login.html">Reset Password</a>
-                                            </div>
-                                        </form>
+                                    <div class="card-header">
+                                        <h3 class="text-center font-weight-light my-4">Réinitialisez le mot de passe</h3>
                                     </div>
-                                    <div class="card-footer text-center py-3">
-                                        <div class="small"><a href="register.html">Need an account? Sign up!</a></div>
+                                    <div class="card-body">
+                                        <div class="small mb-3 text-muted">
+                                            <p> 
+                                                Entrez votre adresse email et nous vous enverrons un lien pour 
+                                                réinitialiser votre mot de passe.
+                                            </p>
+                                        </div>
+
+                                        <form action="#" method="post">
+                                            <div class="form-floating mb-3">
+                                                <input type="email" name="email" class="form-control" id="email" />
+                                                <label for="email">Email</label>
+                                            </div>
+
+                                            <?php if(isset($message)) {echo "<p class='text-danger'>".$message."</p>" ; } ?>
+
+                                            <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
+                                                <a class="btn btn-info"  href="login.php">Connexion</a>
+
+                                                <input type="submit" name="forget_pwd" class="btn btn-primary" 
+                                                    value="Envoyer" 
+                                                >
+                                            </div>
+                                           
+                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -41,22 +109,5 @@
                     </div>
                 </main>
             </div>
-            <div id="layoutAuthentication_footer">
-                <footer class="py-4 bg-light mt-auto">
-                    <div class="container-fluid px-4">
-                        <div class="d-flex align-items-center justify-content-between small">
-                            <div class="text-muted">Copyright &copy; Your Website 2022</div>
-                            <div>
-                                <a href="#">Privacy Policy</a>
-                                &middot;
-                                <a href="#">Terms &amp; Conditions</a>
-                            </div>
-                        </div>
-                    </div>
-                </footer>
-            </div>
-        </div>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-        <script src="js/scripts.js"></script>
-    </body>
-</html>
+
+<?php require_once "communs/footer.php" ; ?>
