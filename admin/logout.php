@@ -13,11 +13,12 @@
         // Destruction de la session elle-même
         session_destroy();
 
-        // Redirection vers la page "index.php"
-        header('location: index.php');
+        // Redirection vers "index.php" publique
+        header('location: ../index.php');
 
     } else {   //si pas de session ouverte
-        echo "<p class='text-danger p-2''>Vous n'êtes pas connecté </p>";
+        echo "<p style='color:red; font-size:18px'>
+                Vous n'êtes pas connecté 
+            </p>";
     }
-
 ?>
