@@ -64,6 +64,7 @@
                     $_SESSION['pseudo'] = $result['pseudo'];
                     $_SESSION['email_user'] = $email;
                     $_SESSION['role_user'] = $result['role_user'];
+                    $_SESSION['photo_user'] = $result['photo_user'];
 
                     // On va créer un coockis pour functionnalité "Se souvenir de moi"
                     // Si la case "Se souvenir de moi" est coché
@@ -80,7 +81,6 @@
                             setcookie($_COOKIE['password'], "");   //on leur attribue une valeur null
                         }
                     }
-
                     // redirection
                     header('location: index.php');
 
