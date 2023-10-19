@@ -4,6 +4,7 @@ admin/css/sb-admin-2.min.css
 
 admin/js/
 admin/scss/
+admin/css/
 admin/vendor/
 
 css/bootstrap.css

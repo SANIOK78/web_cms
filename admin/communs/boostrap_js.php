@@ -21,3 +21,6 @@
 
 <!-- Page level custom scripts -->
 <script src="js/demo/datatables-demo.js"></script>
+
+<!-- Lien JS pour utiliser editeur de tet "summernote" -->
+<script src="js/bootstrap.min.js" ></script>

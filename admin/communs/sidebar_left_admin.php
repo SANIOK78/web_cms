@@ -36,8 +36,9 @@
             <div class="bg-white py-2 collapse-inner rounded">
 
                 <h6 class="collapse-header">Liens:</h6>
-                <a class="collapse-item" href="new_article.php">Nouveau article</a>
-                <a class="collapse-item" href="tous_articles.php">Tous les articles</a>
+                <a class="collapse-item" href="add_article.php">Ajoutez un article</a>
+
+                <a class="collapse-item" href="articles.php">Tous les articles</a>
                 
             </div>
         </div>
