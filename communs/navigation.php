@@ -10,8 +10,8 @@
                 <a class="nav-item nav-link active" href="/index.php">
                     Accueil <span class="sr-only">(current)</span>
                 </a>
-                <a class="nav-item nav-link" href="#">Contact</a>
-                <a class="nav-item nav-link" href="#">Blog</a>
+                <a class="nav-item nav-link" href="#"><strong>Contact</strong></a>
+                <a class="nav-item nav-link" href="#"><strong>Blog</strong></a>
             </div>
         </div>
 
@@ -27,6 +27,13 @@
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                   
+                    <?php 
+                        if(isset($_SESSION['id_user']) && $_SESSION['role_user'] == "Admin" ) {
+
+                            echo "<li><a class='dropdown-item' href='admin/index.php'>Espace Admin</a></li>";
+                        }
+                    ?>
+
                     <li><a class="dropdown-item" href="#!">Settings</a></li>
                     <li><a class="dropdown-item" href="#!">Activity Log</a></li>
                     <li>

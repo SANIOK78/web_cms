@@ -160,91 +160,93 @@ function enregistrementNewArticle(){
     global $connectDB;
     global $message;
 
-    // Si les champs sont vide
-    if(empty($_POST['titreArticle'])) {
-    $message = "<p class='text-danger py-1'>
-            Le titre de l'article doit être une chaine de caractéres non vide
-        </p>"; 
-    } elseif(empty($_POST['tagsArticle'])) {
-        $message = "<p class='text-danger py-1'>
-                Précisez au moins un mot-clé pour cet article
-            </p>";
-    } elseif(empty($_POST['contenuArticle'])) {
-        $message = "<p class='text-danger py-1'>
-                Rentrez le contenu de votre article
-            </p>";             
-    } elseif(empty($_POST['categorieArticle'])) {
-        $message = "<p class='text-danger py-1'>
-                Choisissez une catégorie pour votre article
-            </p>";             
-               
-    } elseif(empty($_FILES['imageArticle']['name'])) {
-        $message = "<p class='text-danger py-1'>
-                Veillez selectionner une image pour votre article
-            </p>";
-        
-    } else {   //tous les champs sont renseignées
-
-        $titreArticle = htmlspecialchars($_POST['titreArticle']);
-        $tagsArticle = htmlspecialchars($_POST['tagsArticle']);
-        $contenuArticle = htmlspecialchars($_POST['contenuArticle']);
-        $nomCategorieArticle = $_POST['categorieArticle'];
-        $newImgArticle = "";
-
-        // Test si on a la bonne extension image
-        if(preg_match("#jpeg|png|jpg#", $_FILES['imageArticle']['type'] )) {
-            // Astuce pour avoir une photo avec un nom unique
-            $newImgArticle = uniqid()."-".$_FILES['imageArticle']['name'];
-            // Chemin ou sera stoqué l'image
-            $path = "../images/imagesArticles/";
-            // upload de l'image
-            move_uploaded_file($_FILES['imageArticle']['tmp_name'], $path.$newImgArticle );
-
-            // Requete vers BD pour recupérer l'ID de la categorie séléctionne
-            $reqIdCategorie = "SELECT * FROM web_cms.categories WHERE nom_categorie = '$nomCategorieArticle' ";
-            // execution de la requete
-            $resultCategorie = $connectDB -> query($reqIdCategorie);
-            // Recup infos de la requete sous forme d'un tableau associatif
-            $infosCategorie = $resultCategorie -> fetch(PDO::FETCH_ASSOC);
-    
-            // On récupèr iD de la categorie, qu'on va inserer dans la table "articles['id_categorie']"
-            $id_categorie = $infosCategorie['id_categorie'];
-    
-            // La date qu'on va inserer dans la table "articles['date_article']"
-            $aujourdhui = date('Y/m/d');
-    
-            // ID auteur récupéré depuis ca session ouverte
-            $id_auteur = $_SESSION['id_user'];
-    
-            // Requete pour inserer les infos récupéré depuis formulaire en BD
-            $reqInsertCategorie = $connectDB -> prepare("INSERT 
-                INTO web_cms.articles(titre_article, date_article, contenu_article, tags_article, statut_article, img_article, id_categorie, id_auteur) 
-                VALUES(:titre_article, :date_article, :contenu_article, :tags_article, :statut_article, :img_article, :id_categorie, :id_auteur)  
-            ");
-    
-            $reqInsertCategorie -> bindValue(':titre_article', $titreArticle );
-            $reqInsertCategorie -> bindValue(':date_article', $aujourdhui);
-            $reqInsertCategorie -> bindValue(':contenu_article', $contenuArticle );
-            $reqInsertCategorie -> bindValue(':tags_article',  $tagsArticle  );
-            $reqInsertCategorie -> bindValue(':statut_article', "Publie" );   //vu que c'est le "admin" directement publié
-            $reqInsertCategorie -> bindValue(':img_article', $newImgArticle);
-            $reqInsertCategorie -> bindValue(':id_categorie', $id_categorie );
-            $reqInsertCategorie -> bindValue(':id_auteur', $id_auteur );
-    
-            // Execution de la requete
-            $result = $reqInsertCategorie -> execute();
-    
-            if(!$result) {
-                $message = "<p class='text-danger py-1'>L'enregistrement de l'article aéchoué ! </p>";
-    
-            } else {
-                $message = "<p class='text-success py-1'>Article enregistré avec succes !</p> ";
-            } 
-        } else {   //image avec un format differant ou plus grande de 1Mo
-
+    if(isset($_POST['ajoutArticle'])){
+        // Si les champs sont vide
+        if(empty($_POST['titreArticle'])) {
             $message = "<p class='text-danger py-1'>
-                Image requis! Format acceptée: jpeg, png, jpg et la taille inferieur a 1 Mo.
+                Le titre de l'article doit être une chaine de caractéres non vide
             </p>"; 
+        } elseif(empty($_POST['tagsArticle'])) {
+            $message = "<p class='text-danger py-1'>
+                    Précisez au moins un mot-clé pour cet article
+                </p>";
+        } elseif(empty($_POST['contenuArticle'])) {
+            $message = "<p class='text-danger py-1'>
+                    Rentrez le contenu de votre article
+                </p>";             
+        } elseif(empty($_POST['categorieArticle'])) {
+            $message = "<p class='text-danger py-1'>
+                    Choisissez une catégorie pour votre article
+                </p>";             
+                
+        } elseif(empty($_FILES['imageArticle']['name'])) {
+            $message = "<p class='text-danger py-1'>
+                    Veillez selectionner une image pour votre article
+                </p>";
+            
+        } else {   //tous les champs sont renseignées
+
+            $titreArticle = htmlspecialchars($_POST['titreArticle']);
+            $tagsArticle = htmlspecialchars($_POST['tagsArticle']);
+            $contenuArticle = htmlspecialchars($_POST['contenuArticle']);
+            $nomCategorieArticle = $_POST['categorieArticle'];
+            $newImgArticle = "";
+
+            // Test si on a la bonne extension image
+            if(preg_match("#jpeg|png|jpg#", $_FILES['imageArticle']['type'] )) {
+                // Astuce pour avoir une photo avec un nom unique
+                $newImgArticle = uniqid()."-".$_FILES['imageArticle']['name'];
+                // Chemin ou sera stoqué l'image
+                $path = "../images/imagesArticles/";
+                // upload de l'image
+                move_uploaded_file($_FILES['imageArticle']['tmp_name'], $path.$newImgArticle );
+
+                // Requete vers BD pour recupérer l'ID de la categorie séléctionne
+                $reqIdCategorie = "SELECT * FROM web_cms.categories WHERE nom_categorie = '$nomCategorieArticle' ";
+                // execution de la requete
+                $resultCategorie = $connectDB -> query($reqIdCategorie);
+                // Recup infos de la requete sous forme d'un tableau associatif
+                $infosCategorie = $resultCategorie -> fetch(PDO::FETCH_ASSOC);
+        
+                // On récupèr iD de la categorie, qu'on va inserer dans la table "articles['id_categorie']"
+                $id_categorie = $infosCategorie['id_categorie'];
+        
+                // La date qu'on va inserer dans la table "articles['date_article']"
+                $aujourdhui = date('Y/m/d');
+        
+                // ID auteur récupéré depuis ca session ouverte
+                $id_auteur = $_SESSION['id_user'];
+        
+                // Requete pour inserer les infos récupéré depuis formulaire en BD
+                $reqInsertCategorie = $connectDB -> prepare("INSERT 
+                    INTO web_cms.articles(titre_article, date_article, contenu_article, tags_article, statut_article, img_article, id_categorie, id_auteur) 
+                    VALUES(:titre_article, :date_article, :contenu_article, :tags_article, :statut_article, :img_article, :id_categorie, :id_auteur)  
+                ");
+        
+                $reqInsertCategorie -> bindValue(':titre_article', $titreArticle );
+                $reqInsertCategorie -> bindValue(':date_article', $aujourdhui);
+                $reqInsertCategorie -> bindValue(':contenu_article', $contenuArticle );
+                $reqInsertCategorie -> bindValue(':tags_article',  $tagsArticle  );
+                $reqInsertCategorie -> bindValue(':statut_article', "Publie" );   //vu que c'est le "admin" directement publié
+                $reqInsertCategorie -> bindValue(':img_article', $newImgArticle);
+                $reqInsertCategorie -> bindValue(':id_categorie', $id_categorie );
+                $reqInsertCategorie -> bindValue(':id_auteur', $id_auteur );
+        
+                // Execution de la requete
+                $result = $reqInsertCategorie -> execute();
+        
+                if(!$result) {
+                    $message = "<p class='text-danger py-1'>L'enregistrement de l'article aéchoué ! </p>";
+        
+                } else {
+                    $message = "<p class='text-success py-1'>Article enregistré avec succes !</p> ";
+                } 
+            } else {   //image avec un format differant ou plus grande de 1Mo
+
+                $message = "<p class='text-danger py-1'>
+                    Image requis! Format acceptée: jpeg, png, jpg et la taille inferieur a 1 Mo.
+                </p>"; 
+            }
         }
     }
 }
@@ -305,7 +307,7 @@ function afficherArticles() {
                     </td>  
                                         
                     <td class='text-center'>
-                        <a href='articles.php?modifArticle=".$articleId."' class='btn btn-warning'>                            
+                        <a href='modifArticle.php?modifArticle=".$articleId."' class='btn btn-warning'>                            
                             Modifier
                         </a>
                     </td>
@@ -317,5 +319,154 @@ function afficherArticles() {
                     </td>            
                 </tr>";
         }                           
+    }
+}
+
+// Suppression d'un article
+function supprimArticle(){
+
+    global $connectDB;  //variable globales qui seront utilisés
+    global $message;     //en dehors de la function
+    
+    $articleId = $_GET['supprimArticle'];
+
+    $reqImage = "SELECT img_article FROM web_cms.articles WHERE id_article = '$articleId'";
+    $resultImg = $connectDB -> query($reqImage);
+
+    $info = $resultImg -> fetch(PDO::FETCH_ASSOC);
+    $nomImage = $info['img_article'];
+
+    // Suppresion de l'ancienne photo:
+    $ancienneImg = "../images/imagesArticles/".$nomImage; // Chemin de l'ancienne photo
+
+    if(file_exists($ancienneImg)) { 
+        unlink($ancienneImg);      // Supprimer l'ancienne image
+    }
+
+    // on recherche en BD la correspondance
+    $reqSuprim = "DELETE FROM web_cms.articles WHERE id_article = '$articleId' ";
+
+    // Execution de la requete
+    $resultSupprim = $connectDB -> exec($reqSuprim);
+
+    if(!$resultSupprim ) {
+        $message = "<p class='text-danger'>Suppression de l'article' echoué </p>";
+
+    } else {
+        $message = "<p class='text-success'>Suppression avec succès de l'article</p>";
+    }
+}
+
+// Modification d'un article
+function modifierArticle(){
+
+    global $connectDB;
+    global $message;
+
+    if(isset($_POST['modifier_article'])) {
+
+        // Si les champs sont vide
+        if(empty($_POST['titreArticle'])) {
+            $message = "<p class='text-danger py-1'>
+                Le titre de l'article doit être une chaine de caractéres et pas vide.
+            </p>"; 
+        } elseif(empty($_POST['tagsArticle'])) {
+            $message = "<p class='text-danger py-1'>
+                    Précisez au moins un mot-clé pour cet article
+                </p>";
+        } elseif(empty($_POST['contenuArticle'])) {
+            $message = "<p class='text-danger py-1'> Rentrez le contenu de votre article</p>"; 
+                                               
+        } elseif(empty($_POST['categorieArticle'])) {
+            $message = "<p class='text-danger py-1'>Choisissez une catégorie pour votre article</p>";                    
+                                            
+        } elseif(empty($_POST['statutArticle'])) {
+            $message = "<p class='text-danger py-1'>Choisissez un statut pour votre article</p>";                      
+                                           
+        } else {   //tous les champs sont renseignées
+
+            $titreArticle = htmlspecialchars($_POST['titreArticle']);
+            $tagsArticle = htmlspecialchars($_POST['tagsArticle']);
+            $contenuArticle = htmlspecialchars($_POST['contenuArticle']);
+            $nomCategorieArticle = $_POST['categorieArticle'];
+            $statutArticle = $_POST['statutArticle'];
+            $articleID = $_POST['idArticle'];  //récupéré depuis <input type="hidden">
+            $newImgArticle = "";
+
+            // Requete vers BD pour recupérer l'ID de la categorie séléctionne
+            $reqIdCategorie = "SELECT * FROM web_cms.categories WHERE nom_categorie = '$nomCategorieArticle' ";
+            // execution de la requete
+            $resultCategorie = $connectDB -> query($reqIdCategorie);
+            // Recup infos de la requete sous forme d'un tableau associatif
+            $infosCategorie = $resultCategorie -> fetch(PDO::FETCH_ASSOC);    
+            // On récupèr iD de la categorie, qu'on va inserer dans la table "articles['id_categorie']"
+            $id_categorie = $infosCategorie['id_categorie'];
+
+            // requete pour chercher le nom de l'image attaché a l'article
+            $reqImage = "SELECT img_article FROM web_cms.articles WHERE id_article = '$articleID'";
+            $resultImg = $connectDB -> query($reqImage); //execution de la requête
+            $info = $resultImg -> fetch(PDO::FETCH_ASSOC);  //esultat dans un tab associatif
+            $nomAncienImage = $info['img_article'];
+
+            // Requete pour mettre a jour l'article dans la BD
+            $reqModifArticle = $connectDB -> prepare("UPDATE web_cms.articles 
+                SET titre_article=:titre_article, contenu_article=:contenu_article, tags_article=:tags_article,
+                statut_article=:statut_article, img_article=:img_article, id_categorie=:id_categorie
+                WHERE id_article = :id_article
+            ");
+
+            // Liaison des champs avec les valeur récupéré depuis formulaire
+            $reqModifArticle -> bindValue(':id_article', $articleID );
+            $reqModifArticle -> bindValue(':titre_article', $titreArticle );
+            $reqModifArticle -> bindValue(':contenu_article', $contenuArticle );
+            $reqModifArticle -> bindValue(':tags_article',  $tagsArticle  );
+            $reqModifArticle -> bindValue(':statut_article', $statutArticle );   
+            $reqModifArticle -> bindValue(':id_categorie', $id_categorie );
+
+            // Vérif si user a choisit une nouvelle image
+            if(empty($_FILES['imageArticle']['name'])) {  //si pas nouvelle image
+
+                // On va conserver l'ancienne image
+                $reqModifArticle -> bindValue(':img_article', $nomAncienImage );
+
+            } else {   //si user a choisit une nouvelle image
+
+                // Chemin de l'ancienne image de l'article
+                $ancienneImg = "../images/imagesArticles/". $nomAncienImage ; 
+
+                // Suppresion de l'ancienne image:
+                if(file_exists($ancienneImg)) { 
+                    unlink($ancienneImg);      
+                }
+    
+                //Enregistrement de la nouvelle image       
+                if(preg_match("#jpeg|png|jpg#", $_FILES['imageArticle']['type'] )) {  // Test extension img
+                    // Astuce pour avoir une photo avec un nom unique
+                    $newImgArticle = uniqid()."-".$_FILES['imageArticle']['name'];
+                    // Chemin ou sera stoqué l'image
+                    $path = "../images/imagesArticles/";
+                    // upload de l'image
+                    move_uploaded_file($_FILES['imageArticle']['tmp_name'], $path.$newImgArticle );
+
+                    $reqModifArticle -> bindValue(':img_article', $newImgArticle);
+          
+                } else {   //image avec un format differant ou plus grande de 1Mo
+    
+                    $message = "<p class='text-danger py-1'>
+                        Image requis! Format acceptée: jpeg, png, jpg et la taille inferieur a 1Mo.
+                    </p>"; 
+                }              
+            }
+
+            // Execution de la requete
+            $result = $reqModifArticle -> execute();
+    
+            if(!$result) {
+                $message = "<p class='text-danger py-1'>La mise à jour de l'article a échoué ! </p>";
+    
+            } else {
+                $message = "<p class='text-success py-1'>Article mis à jour avec succes !</p> ";
+            } 
+        }    
     }
 }

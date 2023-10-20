@@ -4,6 +4,13 @@
     require_once "config/connectDB.php";
     require_once "functions.php";
 
+    // Suppression d'un article => va se faire seulement si on va detecter le
+    // paramétre "supprimArticle" dans URL 
+    if(isset($_GET['supprimArticle']) && $_GET['supprimArticle'] != "") {
+
+        supprimArticle();
+    } 
+
 ?>
 
 <body id="page-top">

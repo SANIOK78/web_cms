@@ -14,10 +14,18 @@
 
     <!-- Nav Item - Dashboard -->
     <li class="nav-item active">
-        <a class="nav-link" href="index.php">
-            <i class="fas fa-fw fa-tachometer-alt"></i>
-            <span>Tableau de bord</span></a>
+        <a class="nav-link" href="index.php"><i class="fas fa-fw fa-tachometer-alt"></i>            
+            <strong>Tableau de bord</strong>
+        </a>
     </li>
+    <hr class="sidebar-divider">
+    
+    <li class="nav-item active">
+        <a class="nav-link" href="../index.php"><i class="fas fa-fw fa-tachometer-alt"></i>            
+            <strong>Espace Publique</strong>
+        </a>
+    </li>
+
     <!-- Divider -->
     <hr class="sidebar-divider">
 
@@ -29,7 +37,7 @@
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
             aria-expanded="true" aria-controls="collapsePages">
             <i class="fas fa-fw fa-folder"></i>
-            <span>Articles</span>
+            <strong>Articles</strong>
         </a>
 
         <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
@@ -48,7 +56,7 @@
     <li class="nav-item">
         <a class="nav-link" href="categorieArticle.php">
             <i class="fas fa-fw fa-chart-area"></i>
-            <span>Catègories</span></a>
+            <strong>Catègories</strong></a>
     </li>
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">
