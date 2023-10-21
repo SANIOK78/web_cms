@@ -13,7 +13,7 @@
     <meta name="description" content="Gestion espace utilisateur" />
     <meta name="author" content="Alexandru" />
     
-    <title>WebCMS</title>
+    <title><?php echo $title ?></title>
 
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
 

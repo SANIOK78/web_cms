@@ -59,18 +59,13 @@
                                             </div>
 
                                             <div class="form-floating mb-3">
-                                                <label for="summernote"><b>Contenu de l'article</b></label>
+                                                <label for="editor"><b>Contenu de l'article</b></label>
                                                 <textarea type="text" name="contenuArticle" class="form-control" 
-                                                    id="summernote">
-                                                </textarea>                                                
-                                                                                            
-                                                <script>
-                                                    $('#summernote').summernote({
-                                                        placeholder: 'Editez votre text ici',
-                                                        tabsize: 2,
-                                                        height: 100
-                                                    });
-                                                </script>
+                                                    id="editor">
+                                                </textarea>
+                                                
+                                                <?php require_once "communs/ckeditor.php" ; ?>
+                                          
                                             </div>
                                         
                                             <div class="row mb-3">

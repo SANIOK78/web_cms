@@ -186,9 +186,9 @@ function enregistrementNewArticle(){
             
         } else {   //tous les champs sont renseignées
 
-            $titreArticle = htmlspecialchars($_POST['titreArticle']);
-            $tagsArticle = htmlspecialchars($_POST['tagsArticle']);
-            $contenuArticle = htmlspecialchars($_POST['contenuArticle']);
+            $titreArticle = $_POST['titreArticle'];
+            $tagsArticle = $_POST['tagsArticle'];
+            $contenuArticle = $_POST['contenuArticle'];
             $nomCategorieArticle = $_POST['categorieArticle'];
             $newImgArticle = "";
 
@@ -385,9 +385,9 @@ function modifierArticle(){
                                            
         } else {   //tous les champs sont renseignées
 
-            $titreArticle = htmlspecialchars($_POST['titreArticle']);
-            $tagsArticle = htmlspecialchars($_POST['tagsArticle']);
-            $contenuArticle = htmlspecialchars($_POST['contenuArticle']);
+            $titreArticle = $_POST['titreArticle'];
+            $tagsArticle = $_POST['tagsArticle'];
+            $contenuArticle = $_POST['contenuArticle'];
             $nomCategorieArticle = $_POST['categorieArticle'];
             $statutArticle = $_POST['statutArticle'];
             $articleID = $_POST['idArticle'];  //récupéré depuis <input type="hidden">

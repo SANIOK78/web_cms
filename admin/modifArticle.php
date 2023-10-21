@@ -98,18 +98,12 @@
                                                     </div>
         
                                                     <div class="form-floating mb-3">
-                                                        <label for="summernote"><b>Contenu de l'article</b></label>
-                                                        <textarea type="text" name="contenuArticle" class="form-control" id="summernote">                                                   
+                                                        <label for="editor"><b>Contenu de l'article</b></label>
+                                                        <textarea type="text" name="contenuArticle" class="form-control" id="editor">                                                   
                                                             <?= $contenuArticle; ?>
                                                         </textarea>                                                
                                                                                                     
-                                                        <script>
-                                                            $('#summernote').summernote({
-                                                                placeholder: 'Editez votre text ici',
-                                                                tabsize: 2,
-                                                                height: 100
-                                                            });
-                                                        </script>
+                                                        <?php require_once "communs/ckeditor.php" ; ?>
                                                     </div>
                                                 
                                                     <div class="row mb-3">
@@ -151,7 +145,7 @@
                                                                     <option value="<?= $statutArticle; ?>" selected >
                                                                         <?= $statutArticle; ?> 
                                                                     </option> 
-                                                                    <option>Publié</option>                                                             
+                                                                    <option>Publie</option>                                                             
                                                                     <option>En attente de publication</option>                                                             
                                                                     <option>Brouillon</option>                                                             
                                                                 </select>

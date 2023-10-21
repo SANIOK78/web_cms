@@ -25,20 +25,20 @@
 
     <!-- Lien éditeur de text "summernote"-->
     <!-- <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script> -->
-    <script src="js/jquery-3.5.1.min.js"></script>
+    <!-- <script src="js/jquery-3.5.1.min.js"></script> -->
     <!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" 
         integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" 
         crossorigin="anonymous">
     </script> -->
-    <script src="js/popper.min.js" ></script>
+    <!-- <script src="js/popper.min.js" ></script> -->
  
-    <script src="js/bootstrap.min.js"></script>
+    <!-- <script src="js/bootstrap.min.js"></script> -->
 
-    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
+    <!-- <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet"> -->
     <!-- <link href="css/summernote-bs4.min.css" rel="stylesheet" > -->
 
     <!-- <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script> -->
-    <script src="js/summernote-bs4.min.js"></script> 
+    <!-- <script src="js/summernote-bs4.min.js"></script>  -->
 
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
