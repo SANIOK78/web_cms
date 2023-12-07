@@ -86,10 +86,10 @@
                         $resultCategorie = $execReqCategorie -> fetch(PDO::FETCH_ASSOC);
                         $nomCategorie = $resultCategorie['nom_categorie'];
                     ?>
-                        <div class="card mb-5">
+                        <div class="card mb-5 shadow ">
                             <!-- Affichage des articles -->
                             <div class="card-header">
-                                <h3>
+                                <h3 class="text-center">
                                     <?php
                                         echo "<a href='article.php?articleId=$articleID'>$titreArticle</a>" ;                                
                                     ?>                                                           

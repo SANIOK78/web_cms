@@ -7,7 +7,7 @@
        
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
-                <a class="nav-item nav-link active" href="/index.php">
+                <a class="nav-item nav-link active" href="index.php">
                     Accueil <span class="sr-only">(current)</span>
                 </a>
                 <a class="nav-item nav-link" href="#"><strong>Contact</strong></a>
@@ -34,7 +34,7 @@
                         }
                     ?>
 
-                    <li><a class="dropdown-item" href="#!">Settings</a></li>
+                    <li><a class="dropdown-item" href="profilUser.php">Profil</a></li>
                     <li><a class="dropdown-item" href="#!">Activity Log</a></li>
                     <li>
                         <hr class="dropdown-divider" />

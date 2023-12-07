@@ -122,7 +122,7 @@
                                                 Supprimer mon compte
                                             </a>";
 
-                                        echo "<a class='btn btn-primary' href='modifier_profil.php?modif_userId=".$userID."'>
+                                        echo "<a class='btn btn-primary' href='./modifier_profil.php?modif_userId=".$userID."'>
                                                 Modifier mon compte
                                             </a>";
                                     } 
@@ -134,4 +134,4 @@
             </main>
         </div>
 
-<?php require_once "communs/footer.php"; ?>
+        <?php require_once "communs/footer.php"; ?>

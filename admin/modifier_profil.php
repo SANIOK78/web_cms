@@ -1,127 +1,126 @@
 <?php
-    session_start();
-    $title = "Modifier votre profil";
-    // Importation code "header-register"
-    require_once "communs/header_login.php";
-    require_once "config/connectDB.php";
+session_start();
+$title = "Modifier votre profil";
+// Importation code "header-register"
+require_once "communs/header_login.php";
+require_once "config/connectDB.php";
 
-    // Vérif s'il y un transfert du paramétre "modif_userId"
-    // Et si ce membre est toujours connecté
-    if(isset($_GET['modif_userId']) && $_SESSION['id_user'] && 
-        $_GET['modif_userId'] == $_SESSION['id_user']) {
-        
-        $userId = $_SESSION['id_user'];
-
-        // Récupération des infos depuis BD
-        $requete = "SELECT * FROM web_cms.utilisateurs 
-            WHERE id_user = $userId AND role_user = 'Admin' " ;
-
-        $result = $connectDB -> query($requete);
-
-        // Récup resultat sous forme d'un tableau
-        $infosUser = $result -> fetch(PDO::FETCH_ASSOC);
-
-        //On va stoker les infos dans des variables
-        $nomUser = $infosUser['nom_user'];
-        $prenomUser = $infosUser['prenom_user'];
-        $pseudo = $infosUser['pseudo'];
-        $photoProfil = $infosUser['photo_user'];   
-        
-        // Logique pour mettre a jour le compte
-        if(isset($_POST['modif_profil'])) {
-
-            // On dois s'assurer que les champs ne sont pas vide
-            // et qu'ils contient le bon type de valeur
-            if(empty($_POST['prenom']) || !ctype_alpha($_POST['prenom'])) {
-                $message = 'Votre prenom doit être une chaine de caractère alphabetique !';
-
-            } elseif(empty($_POST['nom']) || !ctype_alpha( $_POST['nom'])) {
-                $message = 'Votre nom doit être une chaine de caractère alphabetique !';
-
-            } elseif(empty($_POST['pseudo']) || !ctype_alnum( $_POST['pseudo'])) {
-                $message = 'Votre pseudo doit être une chaine de caractère alphanumerique !';
+// Vérif s'il y un transfert du paramétre "modif_userId"
+// Et si ce membre est toujours connecté
+if(isset($_GET['modif_userId']) && isset($_SESSION['id_user']) && 
+    $_GET['modif_userId'] == $_SESSION['id_user']) {
     
-            } else {   //tous les champs sont correctement remplis
+    $userId = $_SESSION['id_user'];
 
-                // On va S'assurer qu'il n'y a pas déjà le même "pseudo" 
-                // en BD, qui doit être unique 
-                $reqPseudo = $connectDB->prepare('SELECT * FROM utilisateurs 
-                    WHERE pseudo = :pseudo AND role_user = :roleUser ');
+    // Récupération des infos depuis BD
+    $requete = "SELECT * FROM web_cms.utilisateurs 
+        WHERE id_user = $userId AND role_user = 'Admin' " ;
 
-                // On fait la liaison du paramétre nomé avec "pseudo" saisi par l'utilisateur
-                $reqPseudo -> bindValue(":pseudo", $_POST['pseudo']);
-                $reqPseudo -> bindValue(":roleUser", 'Admin');
+    $result = $connectDB -> query($requete);
 
-                // execution de la requete
-                $reqPseudo -> execute();
-                // On stock le resultat dans un tableau
-                $resultPseudo = $reqPseudo -> fetch(); 
+    // Récup resultat sous forme d'un tableau
+    $infosUser = $result -> fetch(PDO::FETCH_ASSOC);
 
-                if($resultPseudo) {
-                    $message = "Ce pseudo est déjà pris, choisissez un autre.";
+    //On va stoker les infos dans des variables
+    $nomUser = $infosUser['nom_user'];
+    $prenomUser = $infosUser['prenom_user'];
+    $pseudo = $infosUser['pseudo'];
+    $photoProfil = $infosUser['photo_user'];   
+    
+    // Si userAdmin a cliké sur bouton "modifier mon compte" (Logique pour mettre a jour le compte)
+    if(isset($_POST['modif_profil'])) {
 
-                } else {   //si tous les champs sont correctement renseigné et pas de "pseudo" en double
+        // On dois s'assurer que les champs ne sont pas vide
+        // et qu'ils contient le bon type de valeur
+        if(empty($_POST['prenom']) || !ctype_alpha($_POST['prenom'])) {
+            $message = 'Votre prenom doit être une chaine de caractère alphabetique !';
 
-                    $updateProfil = $connectDB -> prepare("UPDATE web_cms.utilisateurs 
-                        SET nom_user=:nom, prenom_user=:prenom, pseudo=:pseudo, photo_user=:photoProfil
-                        WHERE id_user = :userID AND role_user = :roleUser ");
+        } elseif(empty($_POST['nom']) || !ctype_alpha( $_POST['nom'])) {
+            $message = 'Votre nom doit être une chaine de caractère alphabetique !';
+
+        } elseif(empty($_POST['pseudo']) || !ctype_alnum( $_POST['pseudo'])) {
+            $message = 'Votre pseudo doit être une chaine de caractère alphanumerique !';
+
+        } else {   //tous les champs sont correctement remplis
+
+            // On va S'assurer qu'il n'y a pas déjà le même "pseudo" 
+            // en BD, qui doit être unique 
+            $reqPseudo = $connectDB->prepare('SELECT * FROM utilisateurs 
+                WHERE pseudo = :pseudo AND role_user = :roleUser ');
+
+            // On fait la liaison du paramétre nomé avec "pseudo" saisi par l'utilisateur
+            $reqPseudo -> bindValue(":pseudo", $_POST['pseudo']);
+            $reqPseudo -> bindValue(":roleUser", 'Admin');
+
+            // execution de la requete
+            $reqPseudo -> execute();
+            // On stock le resultat dans un tableau
+            $resultPseudo = $reqPseudo -> fetch(); 
+
+            if($resultPseudo) {
+                $message = "Ce pseudo est déjà pris, choisissez un autre.";
+
+            } else {   //si tous les champs sont correctement renseigné et pas de "pseudo" en double
+
+                $updateProfil = $connectDB -> prepare("UPDATE web_cms.utilisateurs 
+                    SET nom_user=:nom, prenom_user=:prenom, pseudo=:pseudo, photo_user=:photoProfil
+                    WHERE id_user = :userID AND role_user = :roleUser ");
+                
+                $updateProfil -> bindValue(':userID', $userId);
+                $updateProfil -> bindValue(':nom', $_POST['nom'] );
+                $updateProfil-> bindValue(':prenom', $_POST['prenom'] );
+                $updateProfil -> bindValue(':pseudo', $_POST['pseudo']);
+                $updateProfil -> bindValue(':roleUser', 'Admin');
+
+                // On va voir si l'utilisateur a choisit une nouvelle photo
+                if(empty($_FILES['photo_profil']['name'])) {   //si pas de photo profil
+                    // On garde l'ancien photo
+                    $updateProfil -> bindValue(':photoProfil', $photoProfil);
+
+                } else {  //si user a choisi une nouvelle photo
+                    //1. Suppresion de l'ancienne photo:
+                    $ancienneImg = "images/photos_profil/".$photoProfil; // Chemin de l'ancienne photo
+                    if(file_exists($ancienneImg)) { 
+                        unlink($ancienneImg);      // Supprimer l'ancienne image
+                    }
+                    // 2. On rajoute la nouvelle photo
+                    //  vérif si elle correspond au type : .jpeg, .jpg, .png        
+                    if(preg_match("#jpeg|png|jpg#", $_FILES['photo_profil']['type'])){
+
+                        // Astuce pour avoir une photo avec un nom unique
+                        $newPhotoProfil = uniqid()."-".$_FILES['photo_profil']['name'];
+    
+                        // On precise le chemin ou on va stoquer les photo de profil
+                        $path = 'images/photos_profil/';
+    
+                        // ensuite on deplace la photo depuis l'espace temporaire de stockage vers le 
+                        //dossier definitif de stockage ("chemain"."nouveauNomAttribué")
+                        move_uploaded_file($_FILES['photo_profil']['tmp_name'], $path.$newPhotoProfil );
+    
+                    } else {  //si le fichier ne respecte pas les conditions
+                        $message = 'La photo doit être de type: jpeg, png, jpg';
+                    }
                     
-                    $updateProfil -> bindValue(':userID', $userId);
-                    $updateProfil -> bindValue(':nom', $_POST['nom'] );
-                    $updateProfil-> bindValue(':prenom', $_POST['prenom'] );
-                    $updateProfil -> bindValue(':pseudo', $_POST['pseudo']);
-                    $updateProfil -> bindValue(':roleUser', 'Admin');
+                    // enregistrement du photo en BD
+                    $updateProfil -> bindValue(':photoProfil', $newPhotoProfil );
+                }
 
-                    // On va voir si l'utilisateur a choisit une nouvelle photo
-                    if(empty($_FILES['photo_profil']['name'])) {   //si pas de photo profil
-                        // On garde l'ancien photo
-                        $updateProfil -> bindValue(':photoProfil', $photoProfil);
+                $resultUpdate = $updateProfil -> execute();
 
-                    } else {  //si user a choisi une nouvelle photo
-                        //1. Suppresion de l'ancienne photo:
-                        $ancienneImg = "images/photos_profil/".$photoProfil; // Chemin de l'ancienne photo
-                        if(file_exists($ancienneImg)) { 
-                            unlink($ancienneImg);      // Supprimer l'ancienne image
-                        }
-                        // 2. On rajoute la nouvelle photo
-                        //  vérif si elle correspond au type : .jpeg, .jpg, .png        
-                        if(preg_match("#jpeg|png|jpg#", $_FILES['photo_profil']['type'])){
+                if($resultUpdate) {
+                    header('location: profilUser.php');
 
-                            // Astuce pour avoir une photo avec un nom unique
-                            $newPhotoProfil = uniqid()."-".$_FILES['photo_profil']['name'];
-        
-                            // On precise le chemin ou on va stoquer les photo de profil
-                            $path = 'images/photos_profil/';
-        
-                            // ensuite on deplace la photo depuis l'espace temporaire de stockage vers le 
-                            //dossier definitif de stockage ("chaimen"."nouveauNomAttribué")
-                            move_uploaded_file($_FILES['photo_profil']['tmp_name'], $path.$newPhotoProfil );
-        
-                        } else {  //si le fichier ne respecte pas les conditions
-                            $message = 'La photo doit être de type: jpeg, png, jpg';
-                        }
-                        
-                        // enregistrement du photo en BD
-                        $updateProfil -> bindValue(':photoProfil', $newPhotoProfil );
-                    }
-
-                    $resultUpdate = $updateProfil -> execute();
-
-                    if($resultUpdate) {
-                        header('location: profilUser.php');
-
-                    } else {
-                        $message = "Votre profil n'a pas été modifié"; 
-                    }
+                } else {
+                    $message = "Votre profil n'a pas été modifié"; 
                 }
             }
         }
-    }
-?>
+    } 
+    
+    ?>
 
-
-<body class="bg-info">
-    <div id="layoutAuthentication">
+    <body class="bg-info">
+        <div id="layoutAuthentication">
         <div id="layoutAuthentication_content">
             <main>
                 <div class="container">
@@ -198,8 +197,9 @@
                 </div>
             </main>
         </div>
-
-                    <?php
-                        // Importation "footer.php"
-                        require_once "communs/footer.php";
-                    ?>
+ 
+<?php
+} 
+    // Importation "footer.php"
+    require_once "communs/footer.php";
+?>
